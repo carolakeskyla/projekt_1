@@ -2,6 +2,11 @@ from icalendar import Calendar, Event
 from datetime import datetime
 from pytz import UTC # timezone
 
+
+xdxdxd
+
+
+
 cal = Calendar()
 cal.add('prodid', '-//My calendar product//mxm.dk//')
 cal.add('version', '2.0')
