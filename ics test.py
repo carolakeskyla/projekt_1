@@ -2,10 +2,7 @@ from icalendar import Calendar, Event
 from datetime import datetime
 from pytz import UTC # timezone
 
-
-xdxdxd
-
-
+a = 1
 
 cal = Calendar()
 cal.add('prodid', '-//My calendar product//mxm.dk//')
