@@ -1,4 +1,6 @@
-# from tkinter import *
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
 #http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
 import calander
 import tund
@@ -11,16 +13,18 @@ class ExampleApp(tk.Tk):
     def __init__(self):
         calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=643098256")
         tk.Tk.__init__(self)
-        t = SimpleTable(self, 11)
+        # silt = ttk.Label(self, text ='Sisesta URL: ')
+        # silt.place(x=5, y=5)
+        t = SimpleTable(self, 10)
         t.pack(side="top", fill="x")
         t.set(0,0, '')
-        t.set(0,4, 'Esmaspäev')
-        t.set(0,5, 'Teisipäev')
-        t.set(0,6, 'Kolmapäev')
-        t.set(0,7, 'Neljapäev')
-        t.set(0,8, 'Reede')
-        t.set(0,9, 'Laupäev')
-        t.set(0,10, 'Pühapäev')
+        t.set(0,3, 'Esmaspäev')
+        t.set(0,4, 'Teisipäev')
+        t.set(0,5, 'Kolmapäev')
+        t.set(0,6, 'Neljapäev')
+        t.set(0,7, 'Reede')
+        t.set(0,8, 'Laupäev')
+        t.set(0,9, 'Pühapäev')
         
 
 class SimpleTable(tk.Frame):
@@ -55,14 +59,9 @@ class SimpleTable(tk.Frame):
                         label = tk.Label(self, text=str(kella_algus - 1) + '.45')
                         kella_algus += 1
                         i += 1
-                    # elif kella_algus in range(10, 24):
-                    #     label = tk.Label(self, text=str(kella_algus-1) + '.00')
-                    #     kella_algus += 1
-                    # label = tk.Label(self, text='', borderwidth=0, width=7)
                 # else:
                 #     # label = tk.Label(self, text="%s/%s" % (row, column), borderwidth=0, width=7)
-                #     label = tk.Label(self, text='', borderwidth=0, width=8)
-                #
+
                 label.grid(row=row, column=column, sticky="nsew", padx=1, pady=0.5)
                 current_row.append(label)
             self._widgets.append(current_row)
@@ -73,6 +72,8 @@ class SimpleTable(tk.Frame):
     def set(self, row, column, value):
         widget = self._widgets[row][column]
         widget.configure(text=value)
+
+
 
 if __name__ == "__main__":
     app = ExampleApp()
