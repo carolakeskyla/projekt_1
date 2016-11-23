@@ -1,44 +1,57 @@
+# from tkinter import *
+#http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
+
+# root = Tk()
 import tkinter as tk
-# http://stackoverflow.com/questions/11047803/creating-a-table-look-a-like-tkinter
 
 class ExampleApp(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        t = SimpleTable(self, 8)
+        t = SimpleTable(self, 11)
         t.pack(side="top", fill="x")
         t.set(0,0, '')
-        t.set(0,1, 'Esmaspäev')
-        t.set(0,2, 'Teisipäev')
-        t.set(0,3, 'Kolmapäev')
-        t.set(0,4, 'Neljapäev')
-        t.set(0,5, 'Reede')
-        t.set(0,6, 'Laupäev')
-        t.set(0,7, 'Pühapäev')
+        t.set(0,4, 'Esmaspäev')
+        t.set(0,5, 'Teisipäev')
+        t.set(0,6, 'Kolmapäev')
+        t.set(0,7, 'Neljapäev')
+        t.set(0,8, 'Reede')
+        t.set(0,9, 'Laupäev')
+        t.set(0,10, 'Pühapäev')
+
 
 class SimpleTable(tk.Frame):
     def __init__(self, parent, columns=7):
-        # use black background so it "peeks through" to
-        # form grid lines
-        tk.Frame.__init__(self, parent, background="black")
+        tk.Frame.__init__(self, parent, bg="white")
         self._widgets = []
         kella_algus = int(input('Sisesta, mis kellast sinu tööpäev algab: '))
-        kella_lõpp = int(input('Sisesta, mis kellast sinu tööpäev lõppeb:'))
-        ridade_arv = abs(kella_lõpp - kella_algus) + 1
-        for row in range(ridade_arv):
+        kella_lõpp = int(input('Sisesta, mis kellast sinu tööpäev lõppeb:')) + 1
+        ridade_arv = abs(kella_lõpp - kella_algus) * 2 + 2
+        i = 2
+        for row in range(ridade_arv-1):
             current_row = []
             for column in range(columns):
-                if column == 0:
-                    if kella_algus in range(1, 10):
-                        label = tk.Label(self, text='0' + str(kella_algus-1) + '.00')
-                        kella_algus += 1
-                    elif kella_algus in range(10, 24):
-                        label = tk.Label(self, text=str(kella_algus-1) + '.00')
-                        kella_algus += 1
-                    # label = tk.Label(self, text='', borderwidth=0, width=7)
-                else:
-                    # label = tk.Label(self, text="%s/%s" % (row, column), borderwidth=0, width=7)
+                if column != 3:
                     label = tk.Label(self, text='', borderwidth=0, width=8)
-
+                else:
+                    if column == 3 and row == 0:
+                        label = tk.Label(self, text='', borderwidth=0, width=8)
+                    elif column != 3:
+                        label = tk.Label(self, text='', borderwidth=0, width=8)
+                    elif kella_algus in range(kella_algus, kella_lõpp) and i % 2 == 0:
+                        label = tk.Label(self, text= str(kella_algus-1) + '.15')
+                        i += 1
+                    elif kella_algus in range(kella_algus, kella_lõpp) and i % 2 != 0:
+                        label = tk.Label(self, text=str(kella_algus - 1) + '.45')
+                        kella_algus += 1
+                        i += 1
+                    # elif kella_algus in range(10, 24):
+                    #     label = tk.Label(self, text=str(kella_algus-1) + '.00')
+                    #     kella_algus += 1
+                    # label = tk.Label(self, text='', borderwidth=0, width=7)
+                # else:
+                #     # label = tk.Label(self, text="%s/%s" % (row, column), borderwidth=0, width=7)
+                #     label = tk.Label(self, text='', borderwidth=0, width=8)
+                #
                 label.grid(row=row, column=column, sticky="nsew", padx=1, pady=0.5)
                 current_row.append(label)
             self._widgets.append(current_row)
