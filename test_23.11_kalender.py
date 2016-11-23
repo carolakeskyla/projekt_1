@@ -1,19 +1,3 @@
-# from tkinter import *
-#http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
-
-# root = Tk()
-#
-# height = 48
-# width = 7
-# for i in range(height): #Rows
-#     for j in range(width): #Columns
-#         b = Entry(root, text="")
-#         b.grid(row=i, column=j)
-#
-# # You can grab the data by accessing the children of the grid and getting the values from there.
-#
-# mainloop()
-
 import tkinter as tk
 # http://stackoverflow.com/questions/11047803/creating-a-table-look-a-like-tkinter
 
