@@ -10,7 +10,8 @@ def createEventList(url):
         view.printSomeError(error) #TODO Kui calender tuhi voi muu error.
         ...'''
     for event in c.events:
-        tund.Tund(event.name, event.location, event.begin.format(timeFormat), event.end.format(timeFormat), 0) #Creating objects.
-
+        #days = ["Esmaspäev", "Teisipäev", "Kolmapäev", "Neljapäev", "Reede", "Laupäev", "Pühapäev"]
+        tund.Tund(event.name, event.location, event.begin.weekday(), event.begin.format(timeFormat), 'red')
+    
 #events = getEventsList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1228100092")
 

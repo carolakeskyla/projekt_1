@@ -1,11 +1,15 @@
 # from tkinter import *
 #http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
+import calander
+import tund
+
 
 # root = Tk()
 import tkinter as tk
 
 class ExampleApp(tk.Tk):
     def __init__(self):
+        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=643098256")
         tk.Tk.__init__(self)
         t = SimpleTable(self, 11)
         t.pack(side="top", fill="x")
@@ -17,7 +21,7 @@ class ExampleApp(tk.Tk):
         t.set(0,8, 'Reede')
         t.set(0,9, 'Laupäev')
         t.set(0,10, 'Pühapäev')
-
+        
 
 class SimpleTable(tk.Frame):
     def __init__(self, parent, columns=7):
@@ -32,11 +36,18 @@ class SimpleTable(tk.Frame):
             for column in range(columns):
                 if column != 3:
                     label = tk.Label(self, text='', borderwidth=0, width=8)
+                    #print(tund.Tund.tunnid)
+                    for cls in tund.Tund.tunnid:
+                        if cls.getWeekday()+4 == column:
+                            if cls.getTime() == str(kella_algus-1) + ':15':
+                                label = tk.Label(self, text=cls.getLessonName())
+                                print(cls.getLessonName() + " " + str(kella_algus-1) + ':15')
                 else:
                     if column == 3 and row == 0:
                         label = tk.Label(self, text='', borderwidth=0, width=8)
                     elif column != 3:
                         label = tk.Label(self, text='', borderwidth=0, width=8)
+                        
                     elif kella_algus in range(kella_algus, kella_lõpp) and i % 2 == 0:
                         label = tk.Label(self, text= str(kella_algus-1) + '.15')
                         i += 1

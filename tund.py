@@ -12,7 +12,9 @@ class Tund:
         self.color = color
         Tund.tunnid.append(self)
 
-
+    def getLessonName(self):
+        return self.lessonName
+    
     def getWeekday(self):
         return self.weekday
 
@@ -21,3 +23,4 @@ class Tund:
     
     def getColor(self):
         return self.color
+
