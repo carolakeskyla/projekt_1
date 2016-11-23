@@ -5,7 +5,19 @@ class Tund:
     tunnid = []#Koosneb kõigist tundidest.
     
     def __init__(self, lessonName, location, weekday, time, color):
-        self.lessonName = lessonName
+        
+        lastTwoLetters = [lessonName[0], lessonName[1]]
+        breakPoint = None
+        for i in range(2, len(lessonName)):
+            if lessonName[i].isupper():
+                if lastTwoLetters[0].isupper() and lastTwoLetters[1].isupper():
+                    breakPoint = i-2
+        
+        if breakPoint == None:
+            self.lessonName = lessonName
+        else:
+            self.lessonName = lessonName[:breakPoint]
+
         self.location = location
         self.weekday = weekday
         self.time = time
