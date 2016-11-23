@@ -1,3 +1,9 @@
+#todo:
+#1. kõik teised sildid, boxid, buttonid
+#2. paranda see, et esmaspäev algab õigest kohast
+#3. vaata disaini üle
+#4. paranda, et kellaajad algaksid, kasutajasisendi kellajast 
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
