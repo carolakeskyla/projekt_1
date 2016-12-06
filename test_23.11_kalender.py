@@ -1,8 +1,8 @@
 # todo:
 # 1. kõik teised sildid, boxid, buttonid
-# 2. paranda see, et esmaspäev algab õigest kohast ✓
-# 3. vaata disaini üle 
-# 4. paranda, et kellaajad algaksid, kasutajasisendi kellajast ✓
+# 2. paranda see, et esmaspäev algab õigest kohast
+# 3. vaata disaini üle
+# 4. paranda, et kellaajad algaksid, kasutajasisendi kellajast
 
 from tkinter import *
 from tkinter import ttk
@@ -10,21 +10,20 @@ from tkinter import messagebox
 #Source:# http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
 import calander
 import tund
+import labels
 
 # root = Tk()
 import tkinter as tk
 
 class ExampleApp(tk.Tk):
     def __init__(self):
-        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=643098256")
+        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1499611305")
         tk.Tk.__init__(self)
         # silt = ttk.Label(self, text ='Sisesta URL: ')
         # silt.place(x=5, y=5)
         t = SimpleTable(self, 10)
         t.pack(side="top", fill="x")
-        t.set(0,0, 'kolumn_0')
-        t.set(0, 1, 'kolumn_1')
-        t.set(0, 2, '')
+        t.set(0, 0, '')
         t.set(0, 3, 'Esmaspäev')
         t.set(0, 4, 'Teisipäev')
         t.set(0, 5, 'Kolmapäev')
@@ -33,35 +32,36 @@ class ExampleApp(tk.Tk):
         t.set(0, 8, 'Laupäev')
         t.set(0, 9, 'Pühapäev')
 
-
 class SimpleTable(tk.Frame):
     def __init__(self, parent, columns=7):
-        tk.Frame.__init__(self, parent) #bg="white")
+        tk.Frame.__init__(self, parent, bg="white")
         self._widgets = []
-        kella_algus = int(input('Sisesta, mis kellast sinu tööpäev algab: ')) + 1
+        kella_algus = int(input('Sisesta, mis kellast sinu tööpäev algab: '))
         kella_lõpp = int(input('Sisesta, mis kellast sinu tööpäev lõppeb:')) + 1
         ridade_arv = abs(kella_lõpp - kella_algus) * 2 + 2
         i = 2
         for row in range(ridade_arv - 1):
             current_row = []
             for column in range(columns):
-                if column != 2:
+                if column != 3:
                     label = tk.Label(self, text='', borderwidth=0, width=8)
                     # print(tund.Tund.tunnid)
                     for cls in tund.Tund.tunnid:
                         if cls.getWeekday() + 4 == column:
-                            if cls.getTime() == str(kella_algus - 1) + ':15':
-                                label = tk.Label(self, text=cls.getLessonName())
+                            if cls.getTime() == str(kella_algus - 1) + ':15': #Fixing...
+                                label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(), cls.getDescription(), cls.getDate())
+                                
                                 print(cls.getLessonName() + " " + str(kella_algus - 1) + ':15')
                 else:
-                    if column == 2 and row == 0:
+                    if column == 3 and row == 0:
                         label = tk.Label(self, text='', borderwidth=0, width=8)
-                    elif column != 2:
+                    elif column != 3:
                         label = tk.Label(self, text='', borderwidth=0, width=8)
+
                     elif kella_algus in range(kella_algus, kella_lõpp) and i % 2 == 0:
                         label = tk.Label(self, text=str(kella_algus - 1) + '.15')
                         i += 1
-                    else kella_algus in range(kella_algus, kella_lõpp) and i % 2 != 0:
+                    elif kella_algus in range(kella_algus, kella_lõpp) and i % 2 != 0:
                         label = tk.Label(self, text=str(kella_algus - 1) + '.45')
                         kella_algus += 1
                         i += 1
