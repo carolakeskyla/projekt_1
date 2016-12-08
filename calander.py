@@ -2,6 +2,10 @@ from ics import Calendar, Event
 from urllib.request import urlopen
 import tund
 
+#Todo:
+#ics failist frequency kontroll, ja datefrom/ dateuntil kontroll 
+#timeFormat teistsuguseks > kellaaegasi on ka tarvis kätte saada :)
+
 def createEventList(url):
     timeFormat = "HH:mm" #Default time format
     timeFormat2 = "DD/MM/YYYY"
