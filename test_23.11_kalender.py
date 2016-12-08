@@ -17,54 +17,91 @@ import tkinter as tk
 
 class ExampleApp(tk.Tk):
     def __init__(self):
-        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1499611305")
+        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1175368736")
         tk.Tk.__init__(self)
         # silt = ttk.Label(self, text ='Sisesta URL: ')
         # silt.place(x=5, y=5)
-        t = SimpleTable(self, 10)
-        t.pack(side="top", fill="x")
-        t.set(0,0, 'kolumn_0')
-        t.set(0, 1, 'kolumn_1')
-        t.set(0, 2, '')
-        t.set(0, 3, 'Esmaspäev')
-        t.set(0, 4, 'Teisipäev')
-        t.set(0, 5, 'Kolmapäev')
-        t.set(0, 6, 'Neljapäev')
-        t.set(0, 7, 'Reede')
-        t.set(0, 8, 'Laupäev')
-        t.set(0, 9, 'Pühapäev')
 
+
+        self.t = SimpleTable(self, 10)
+
+        self.t.pack(side="top", fill="x")
+        self.t.set(0,0, 'kolumn_0')
+        self.t.set(0, 1, 'kolumn_1')
+        self.t.set(0, 2, '')
+        self.t.set(0, 3, 'Esmaspäev')
+        self.t.set(0, 4, 'Teisipäev')
+        self.t.set(0, 5, 'Kolmapäev')
+        self.t.set(0, 6, 'Neljapäev')
+        self.t.set(0, 7, 'Reede')
+        self.t.set(0, 8, 'Laupäev')
+        self.t.set(0, 9, 'Pühapäev')
+        self.initalizeComponents()
+
+    def initalizeComponents(self):
+        #Tööpäeva alguse ja lõpu küsimine:
+        self.componentsFrame = ttk.Frame(self, padding="10 10 10 10")
+        Label(self.t, text='Tööaja algus:').grid(row=1, column=0)
+        self.päeva_algus = Entry(self.t)
+        self.päeva_algus.grid(row=1, column=1)
+        self.päeva_algus.configure(width=2)
+        #Label(self.t, text='.00').grid(row=1, column=1, sticky=N+W+S, padx=30)
+
+        Label(self.t, text='Tööaja lõpp:').grid(row=2, column=0, sticky=N+W)
+        self.päeva_lõpp = Entry(self.t)
+        self.päeva_lõpp.configure(width=2)
+        self.päeva_lõpp.grid(row=2, column=1, sticky=N+W)
+        #Label(text='.00').grid(row=3, column=0, sticky=N+W+S, padx=30)
+
+        self.nupp_kellaajad = Button(self.t, text='Otsi aeg', width=10, command=self.onButtonClicked)
+        self.nupp_kellaajad.grid(row=3, column=1, columnspan=2, sticky=N+W)
+
+    def onButtonClicked(self):
+        rowColumn = self.getRowColumn("10:45", 5)
+        self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
+        print("clicked button")
+
+    def getRowColumn(self, time, weekday):
+        #rows = 2 * (self.t.kella_lõpp - self.t.kella_algus)
+        h,m = time.split(":")
+        column = 2 + weekday #Weekday int(1, 7)
+        row = 0
+        if m == "15":
+            row = (int(h) - int(self.t.kella_algus)) * 2
+        else:
+            row = (int(h) - int(self.t.kella_algus)) * 2 + 1
+        return [row+2, column] #+2 first row are weekend day labels
 
 class SimpleTable(tk.Frame):
     def __init__(self, parent, columns=7):
-        tk.Frame.__init__(self, parent) #bg="white")
+        tk.Frame.__init__(self, parent, bg="grey")
         self._widgets = []
-        kella_algus = int(input('Sisesta, mis kellast sinu tööpäev algab: ')) + 1
-        kella_lõpp = int(input('Sisesta, mis kellast sinu tööpäev lõppeb:')) + 1
-        ridade_arv = abs(kella_lõpp - kella_algus) * 2 + 2
+        self.kella_algus = 9#int(input('Sisesta, mis kellast sinu tööpäev algab: ')) + 1
+        self.kella_lõpp = 20#int(input('Sisesta, mis kellast sinu tööpäev lõppeb:')) + 1
+        ridade_arv = abs(self.kella_lõpp - self.kella_algus) * 2 + 2
         i = 2
         for row in range(ridade_arv - 1):
             current_row = []
             for column in range(columns):
                 if column != 2:
-                    label = tk.Label(self, text='', borderwidth=0, width=8)
+                    label = tk.Label(self, text='', borderwidth=0, width=8, bg="#a8a8a8")
                     # print(tund.Tund.tunnid)
                     for cls in tund.Tund.tunnid:
                         if cls.getWeekday() + 4 == column:
-                            if cls.getTime() == str(kella_algus - 1) + ':15':
+                            if cls.getTime() == str(self.kella_algus-1) + ':15':
                                 label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(), cls.getDescription(), cls.getDate())
-                                print(cls.getLessonName() + " " + str(kella_algus - 1) + ':15')
+                                print(cls.getLessonName() + " " + str(self.kella_algus-2) + ':15')
                 else:
                     if column == 2 and row == 0:
                         label = tk.Label(self, text='', borderwidth=0, width=8)
-                    elif column != 2:
+                    elif column != 2:#Should be removed... never gets executed
                         label = tk.Label(self, text='', borderwidth=0, width=8)
-                    elif kella_algus in range(kella_algus, kella_lõpp) and i % 2 == 0:
-                        label = tk.Label(self, text=str(kella_algus - 1) + '.15')
+                    elif self.kella_algus in range(self.kella_algus, self.kella_lõpp) and i % 2 == 0:
+                        label = tk.Label(self, text=str(self.kella_algus - 1) + '.15')
                         i += 1
-                    elif kella_algus in range(kella_algus, kella_lõpp) and i % 2 != 0:
-                        label = tk.Label(self, text=str(kella_algus - 1) + '.45')
-                        kella_algus += 1
+                    elif self.kella_algus in range(self.kella_algus, self.kella_lõpp) and i % 2 != 0:
+                        label = tk.Label(self, text=str(self.kella_algus - 1) + '.45')
+                        self.kella_algus += 1
                         i += 1
                 label.grid(row=row, column=column, sticky="nsew", padx=1, pady=0.5)
                 current_row.append(label)
@@ -76,6 +113,11 @@ class SimpleTable(tk.Frame):
     def set(self, row, column, value):
         widget = self._widgets[row][column]
         widget.configure(text=value)
+
+    def setWidgetBackground(self, row, column, bg):
+        widget = self._widgets[row][column]
+        widget.configure(bg=bg)
+
 
 if __name__ == "__main__":
     app = ExampleApp()

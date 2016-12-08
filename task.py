@@ -38,7 +38,7 @@ class Task:
                 ...
     def checkIfTimeConflicts(self, time):        
         for t in tund.Tund.tunnid:
-            h,s = t.getTime().split(":")
+                h,s = t.getTime().split(":")
                 for i in range(3):#15 minutit * 6 = 1h 30min tund
                     if (h + ":" + str(int(s) + 15*i)) == time:
                         return True

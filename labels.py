@@ -9,6 +9,7 @@ class Labels(tk.Label):
         self.date = date
         self.bind("<Enter>", self.mouseEnter)
         self.bind("<Leave>", self.mouseLeave)
+        self.bind("<Button-1>", self.mouseClick)
     def mouseEnter(self, event):
         print("Entered")
         x = y = 0
@@ -27,3 +28,5 @@ class Labels(tk.Label):
         print("Left")
         if self.tw:
             self.tw.destroy()
+    def mouseClick(self, event):
+        print("Clicked")
