@@ -1,3 +1,6 @@
+#eraldi funktsiooni kalendri tegemine
+#mis funktsioone kalender edasi kutsub?
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -80,11 +83,5 @@ nupp_url.grid(row=7, column=0, columnspan=2, sticky=N+W)
 Label(text='Sisesta uue ülesande nimi: ').grid(row=8, column=0, sticky= 'nsew')
 TEST2 = Entry()
 TEST2.grid(row=9, column=0, columnspan=2, sticky=N + W)
-
-### JÄRGNEV TEKITAB HETKEL VEEL KALENDRI ILMA ÜLEMISEST KOODIST SAADAVA INFOTA:
-
-# päeva_algus = int(input('Sisesta, mis kellast sinu tööpäevad sellel nädalal algavad: ')) + 1
-# päeva_lõpp = int(input('Sisesta, mis kellast sinu tööpäevad lõppevad:')) + 1
-#
 
 mainloop()
