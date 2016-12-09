@@ -8,6 +8,7 @@ class Labels(tk.Label):
         self.location = location
         self.description = description
         self.date = date
+        self.toolTipText = ""
         self.bind("<Enter>", self.mouseEnter)
         self.bind("<Leave>", self.mouseLeave)
         self.bind("<Button-1>", self.mouseClick)
@@ -22,7 +23,8 @@ class Labels(tk.Label):
         self.tw = tk.Toplevel(self)
         self.tw.wm_overrideredirect(True)
         self.tw.wm_geometry("+%d+%d" % (x, y))
-        label = tk.Label(self.tw, text=self.time + " " + self.date + "\n" + self.location + "\n" + self.description, justify='left',
+        self.toolTipText =  self.time + " " + self.date + "\n" + self.location + "\n" + self.description
+        label = tk.Label(self.tw, text=self.toolTipText, justify='left',
                        background='yellow', relief='solid', borderwidth=1,
                        font=("times", "8", "normal"))
         label.pack(ipadx=1)
@@ -33,3 +35,9 @@ class Labels(tk.Label):
             print("Left")
     def mouseClick(self, event):
         print("Clicked")
+
+    def setTooltipText(self, text):
+        self.toolTipText = text
+
+    def setLessonName(self, name):
+        self.lessonName = name

@@ -11,6 +11,7 @@ from tkinter import messagebox
 import calander
 import tund
 import labels
+import task
 
 # root = Tk()
 import tkinter as tk
@@ -56,10 +57,17 @@ class Main(tk.Tk):
 
     #Some button...
     def onButtonClicked(self):
-        rowColumn = self.getRowColumn("10:45", 5)
-        self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
-        self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
+
+        #self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
+        #self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
         print("clicked button")
+        task.Task("Test1", 30, "Whatervear", 2,1, "red")
+        for t in task.Task.tasks:
+            for time in t.getTimesList():
+                rowColumn = self.getRowColumn(time[1], time[0])
+                self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
+                self.t.getLabelObject(rowColumn[0],rowColumn[1]).setTooltipText("TESTETST")
+                self.t.getLabelObject(rowColumn[0],rowColumn[1]).setLessonName("TEST")
 
     #Gets row and column values that correspond to the time and weekday. Returns list of int, [row, column].
     def getRowColumn(self, time, weekday):
@@ -119,6 +127,8 @@ class SimpleTable(tk.Frame):
         widget = self._widgets[row][column]
         widget.configure(bg=bg)
 
+    def getLabelObject(self, row, column):
+        return self._widgets[row][column]
 
 if __name__ == "__main__":
     app = Main()
