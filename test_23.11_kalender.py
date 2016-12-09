@@ -15,15 +15,12 @@ import labels
 # root = Tk()
 import tkinter as tk
 
-class ExampleApp(tk.Tk):
+class Main(tk.Tk):
     def __init__(self):
         calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1175368736")
         tk.Tk.__init__(self)
-        # silt = ttk.Label(self, text ='Sisesta URL: ')
-        # silt.place(x=5, y=5)
 
-
-        self.t = SimpleTable(self, 10)
+        self.t = SimpleTable(self, 10)#Frame consisting grids
 
         self.t.pack(side="top", fill="x")
         self.t.set(0,0, 'kolumn_0')
@@ -36,6 +33,7 @@ class ExampleApp(tk.Tk):
         self.t.set(0, 7, 'Reede')
         self.t.set(0, 8, 'Laupäev')
         self.t.set(0, 9, 'Pühapäev')
+        
         self.initalizeComponents()
 
     def initalizeComponents(self):
@@ -56,11 +54,14 @@ class ExampleApp(tk.Tk):
         self.nupp_kellaajad = Button(self.t, text='Otsi aeg', width=10, command=self.onButtonClicked)
         self.nupp_kellaajad.grid(row=3, column=1, columnspan=2, sticky=N+W)
 
+    #Some button...
     def onButtonClicked(self):
         rowColumn = self.getRowColumn("10:45", 5)
         self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
+        self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
         print("clicked button")
 
+    #Gets row and column values that correspond to the time and weekday. Returns list of int, [row, column].
     def getRowColumn(self, time, weekday):
         #rows = 2 * (self.t.kella_lõpp - self.t.kella_algus)
         h,m = time.split(":")
@@ -84,7 +85,7 @@ class SimpleTable(tk.Frame):
             current_row = []
             for column in range(columns):
                 if column != 2:
-                    label = tk.Label(self, text='', borderwidth=0, width=8, bg="#a8a8a8")
+                    label = labels.Labels(self)#text='', borderwidth=0, width=8, bg="#a8a8a8")
                     # print(tund.Tund.tunnid)
                     for cls in tund.Tund.tunnid:
                         if cls.getWeekday() + 4 == column:
@@ -92,9 +93,7 @@ class SimpleTable(tk.Frame):
                                 label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(), cls.getDescription(), cls.getDate())
                                 print(cls.getLessonName() + " " + str(self.kella_algus-2) + ':15')
                 else:
-                    if column == 2 and row == 0:
-                        label = tk.Label(self, text='', borderwidth=0, width=8)
-                    elif column != 2:#Should be removed... never gets executed
+                    if row == 0: #Kellaaegade üleval olev tühikast.
                         label = tk.Label(self, text='', borderwidth=0, width=8)
                     elif self.kella_algus in range(self.kella_algus, self.kella_lõpp) and i % 2 == 0:
                         label = tk.Label(self, text=str(self.kella_algus - 1) + '.15')
@@ -110,17 +109,19 @@ class SimpleTable(tk.Frame):
         for column in range(columns):
             self.grid_columnconfigure(column, weight=1)
 
+    #Retrives widget at certain location and modifies it's text attribute.
     def set(self, row, column, value):
         widget = self._widgets[row][column]
         widget.configure(text=value)
 
+    #Same as set, but modifies bg attribute.
     def setWidgetBackground(self, row, column, bg):
         widget = self._widgets[row][column]
         widget.configure(bg=bg)
 
 
 if __name__ == "__main__":
-    app = ExampleApp()
+    app = Main()
     app.mainloop()
 
 #Juurdeõppimiseks:

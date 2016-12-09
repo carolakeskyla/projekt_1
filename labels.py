@@ -1,8 +1,9 @@
 import tkinter as tk
 
 class Labels(tk.Label):
-    def __init__(self, frame, lessonName, time, location, description, date):
+    def __init__(self, frame, lessonName="", time="", location="", description="", date=""):
         tk.Label.__init__(self, frame, text=lessonName)
+        self.lessonName = lessonName
         self.time = time
         self.location = location
         self.description = description
@@ -11,6 +12,8 @@ class Labels(tk.Label):
         self.bind("<Leave>", self.mouseLeave)
         self.bind("<Button-1>", self.mouseClick)
     def mouseEnter(self, event):
+        if(self.lessonName == ""):
+            return
         print("Entered")
         x = y = 0
         x, y, cx, cy = self.bbox("insert")
@@ -25,8 +28,8 @@ class Labels(tk.Label):
         label.pack(ipadx=1)
 
     def mouseLeave(self, event):
-        print("Left")
-        if self.tw:
+        if self.lessonName != "" and self.tw:
             self.tw.destroy()
+            print("Left")
     def mouseClick(self, event):
         print("Clicked")

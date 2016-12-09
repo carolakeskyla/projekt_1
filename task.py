@@ -29,7 +29,7 @@ class Task:
         if self.ajakulu % self.timeSteps == 0:
             for i in range(int(a)):
                 rand = randint(10, 23)
-                ...
+
         else:
             a = int(a)
             for i in range(a):
@@ -48,6 +48,15 @@ class Task:
                     if (str(int(h)+1) + ":" + str(int(s) + 15*i)) == time:
                         return True
         return False
+
+    def addMinutesToTime(self, time, minutes):
+        h,m = time.split(":")
+        h = int(h)
+        m = int(m)
+        while(m + minutes) >= 60:
+            h += 1
+            m = 0
+            m += minutes
         
         
         
