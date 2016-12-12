@@ -5,10 +5,13 @@ import calander
 import tund
 import labels
 
+#TODO: Ajaplaneerija salvestamine
+#TODO: Ajaplaneerija avamine
+#TODO: Ajaplaneerijast kindla ülesande tühjendamine
+
 master = Tk()
 
 def tabel(päeva_algus, päeva_lõpp):
-
     #Vana tabeli ära kustutamine igal uuel väljakutsel #Abi: http://stackoverflow.com/questions/23189610/remove-widgets-from-grid-in-tkinter
     for label in master.grid_slaves():
         if int(label.grid_info()['column']) > 3:
@@ -53,10 +56,11 @@ def tabel(päeva_algus, päeva_lõpp):
         rows.append(cols)
 
 def callback():
-    calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1595380087")
-    # FIXME: See ei tööta enam nii nagu eelmisel testil.
-    päeva_algus = int(float(kella_algus.get()))
-    päeva_lõpp = int(float(kella_lõpp.get()))
+    try:
+        päeva_algus = int(float(kella_algus.get()))
+        päeva_lõpp = int(float(kella_lõpp.get()))
+    except ValueError:
+        messagebox.showwarning(title='Vigane sisend!', message='Vigane väärtus')
     if päeva_lõpp > päeva_algus and päeva_lõpp in range(2,25) and päeva_algus in range(1,24):
         tabel(päeva_algus, päeva_lõpp)
     else:
@@ -71,6 +75,14 @@ def callback():
         if päeva_algus not in range(1, 24) and päeva_lõpp in range(2,25):
             messagebox.showwarning(title='Vigane sisend!', message='Sisestatud tööaja algus ei ole vahemikus 1-23.')
 
+def get_url():
+    sisestus = url.get()
+    try:
+        test = calander.createEventList(sisestus)  # FIXME: Not correct. Ajutine lahendus.
+        tabel(päeva_algus, päeva_lõpp, test))
+    except:
+        messagebox.showwarning(title='Vigane URL-aadress!',
+                               message='Sisestatud URL ei ole korrektne. Proovi uuesti!')
 
 #Tööpäeva alguse ja lõpu küsimine:
 Label(text='1. Vali produktiivseim aeg töötamiseks: ').grid(row=0, column=0, sticky=N+W)
@@ -94,7 +106,7 @@ Label(text='2. Sisesta URL-aadress: ').grid(row=4, column=0, sticky=N+W)
 url = Entry()  # relief=RIDGE
 url.grid(row=5, column=0, sticky=N + W)
 url.configure(width=25)
-nupp_url = Button(text='Lisa kohustused', width=25) #command=self.kutsu_url)
+nupp_url = Button(text='Lisa kohustused', width=25, command=get_url)
 nupp_url.grid(row=6, column=0,  sticky=N + W)
 
 # Uue ülesande nimi:
@@ -127,11 +139,7 @@ tähtaeg = OptionMenu(master, alg_tähtaeg, 'Esmaspäev', 'Teisipäev', 'Kolmap�
 tähtaeg.grid(row=11, column=0, padx=60, sticky=N+W)
 
 #Uue ülesande callback (lisamisnupp):
-nupp_uus = Button(text='Leia sobivad ajad') #command=self.lisa_ülesanne)
+nupp_uus = Button(master, width=10, text='Leia sobivad ajad') #command=self.lisa_ülesanne)
 nupp_uus.grid(row = 12, column=0, sticky='nsew')
-
-#TODO: Ajaplaneerija salvestamine
-#TODO: Ajaplaneerija avamine
-#TODO: Ajaplaneerijast kindla ülesande tühjendamine
 
 mainloop()
