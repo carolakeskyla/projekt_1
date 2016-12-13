@@ -77,7 +77,7 @@ class Main(tk.Tk):
         self.ajakulu = Entry(self.t)
         self.ajakulu.configure(width=3)
         self.ajakulu.grid(row=9, column=0, padx=55, sticky=N + W)
-        Label(self.t, text='tundi (0.5h kaupa)').grid(row=9, column=0, padx=100, columnspan=2, sticky=N + W + S)
+        Label(self.t, text='tundi (0.5h kaupa)').grid(row=9, column=0, padx=(100,0), columnspan=2, sticky=N + W + S)
 
 
         # Uue ülesande jagamine #FIXME: Kas drop menu või käsitsi sisestus?
@@ -86,7 +86,7 @@ class Main(tk.Tk):
         Label(self.t, text='Töö tükeldamine:').grid(row=10, column=0, sticky=N + W)
         self.tükeldamine = OptionMenu(self.t, self.alg_tükeldamine, '1 kord', '2 korda', '3 korda', '4 korda',
                                  '5 korda', '6 korda')
-        self.tükeldamine.grid(row=10, column=0, padx=120, sticky=N + W)
+        self.tükeldamine.grid(row=10, column=0, padx=(120,0), sticky=N + W)
 
         # Mis päevaks?
         self.alg_tähtaeg = StringVar(self)
