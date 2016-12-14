@@ -199,8 +199,8 @@ class SimpleTable(tk.Frame):
             try:
                 label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
                                       cls.getDescription(), cls.getDate())
-                label.grid(row=index[0]+1, column=index[1]+1, rowspan=4, sticky="nsew", padx=0.5, pady=0.5)
-                label.configure(width=8, font='Sans 11')
+                label.grid(row=index[0]+1, column=index[1]+1, rowspan=4, sticky="nsew", padx=(0.5, 0), pady= (0, 0.5))
+                label.configure(width=100, font='Sans 11')
                 self._widgets[index[0]][index[1]] = label
             except:
                 pass#sest mul on suva
