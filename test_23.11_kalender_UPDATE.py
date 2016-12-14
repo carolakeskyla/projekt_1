@@ -151,7 +151,7 @@ class SimpleTable(tk.Frame):
     def __init__(self, parent, kella_algus, kella_lõpp, columns=7):
         tk.Frame.__init__(self, parent, bg="#f4f4f2")
 
-        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=2065436593")
+        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1134811720")
 
         self._widgets = []
         self.kella_algus = kella_algus  # int(input('Sisesta, mis kellast sinu tööpäev algab: ')) + 1
@@ -166,7 +166,7 @@ class SimpleTable(tk.Frame):
                     #print(tund.Tund.tunnid)
                     for cls in tund.Tund.tunnid:
                         if cls.getWeekday() + 1 == column:
-                            if cls.getTime() == str(self.kella_algus - 1) + ':15':
+                            if cls.getTime() == str(self.kella_algus-1) + ':15':
                                 label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
                                                       cls.getDescription(), cls.getDate())
                                 print(cls.getLessonName() + " " + str(self.kella_algus - 2) + ':15')
@@ -181,6 +181,7 @@ class SimpleTable(tk.Frame):
                         self.kella_algus += 1
                         i += 1
                 label.grid(row=row, column=column, sticky="nsew", padx=0.5, pady=0.5)
+                label.configure(width=8, font='Helvetica 10')
                 current_row.append(label)
             self._widgets.append(current_row)
             
