@@ -181,7 +181,7 @@ class SimpleTable(tk.Frame):
                         self.kella_algus += 1
                         i += 1
                 label.grid(row=row, column=column, sticky="nsew", padx=0.5, pady=0.5)
-                label.configure(width=8, font='Sans 10')
+                label.configure(width=8, font='Sans 12')
                 current_row.append(label)
             self._widgets.append(current_row)
             
