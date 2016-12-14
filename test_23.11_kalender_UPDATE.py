@@ -49,12 +49,14 @@ class EntryTable(tk.Frame):
         self.url.grid(row=4, column=0, sticky=N + W)
         self.url.configure(width=25)
 
-        self.nupp_kellaajad = Button(self, text='Loo kalender', width=25, command=self.callback)  #Võtab kellaajad ja URLi
-        self.nupp_kellaajad.grid(row=5, column=0, pady=(0, 30), sticky=N + W)
+        self.nupp_kustuta = Button(self, text='Kustuta vana kalender', width=25, command=lambda: self.a.pack_forget())
+        self.nupp_kustuta.grid(row=5, column=0, sticky=N + W)
+
+        self.nupp_kellaajad = Button(self, text='Loo uus kalender', width=25, command=self.callback)  #Võtab kellaajad ja URLi
+        self.nupp_kellaajad.grid(row=6, column=0, pady=(0, 30), sticky=N + W)
 
         # # Uue ülesande nimi:
-        Label(self, text='3. Lisa uus ülesanne:', font='Sans 13 bold').grid(row=7, column=0, pady=5,
-                                                                            sticky=N + W)  # FIXME: Tee boldiks
+        Label(self, text='3. Lisa uus ülesanne:', font='Sans 13 bold').grid(row=7, column=0, pady=5, sticky=N + W)
         Label(self, text='Nimi:').grid(row=8, column=0, sticky=N + W)
         self.ülesanne = Entry(self)
         self.ülesanne.grid(row=8, column=0, padx=55, sticky=N + W)
@@ -87,7 +89,7 @@ class EntryTable(tk.Frame):
                                command=self.onButtonClicked)  # command=self.lisa_ülesanne)
         self.nupp_uus.grid(row=12, column=0, sticky='nsew')
 
-    def onButtonClicked(self):  # FIXME: Kuidas SimpleTablesse tagastaks?
+    def onButtonClicked(self):
         # self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
         # self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
         print("clicked button")
@@ -102,7 +104,7 @@ class EntryTable(tk.Frame):
 
     def callback(self):
         self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), self.url.get(), 8)
-        self.a.pack(side='right', fill='x')
+        self.a.pack(side='top', fill='x')
 
         for i in range(3, 8):
             self.a.columnconfigure(i, minsize=80, weight=1)
@@ -192,7 +194,7 @@ class SimpleTable(tk.Frame):
         self.set(0, 6, 'Laupäev')
         self.set(0, 7, 'Pühapäev')
 
-        print(self._widgets)  # FIXME: Kas salvestame nii faili?
+        # print(self._widgets)  # FIXME: Kas salvestame nii faili?
 
         for column in range(columns):
             self.grid_columnconfigure(column, weight=1)
