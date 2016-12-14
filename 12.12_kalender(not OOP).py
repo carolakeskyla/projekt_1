@@ -79,7 +79,7 @@ def get_url():
     sisestus = url.get()
     try:
         test = calander.createEventList(sisestus)  # FIXME: Not correct. Ajutine lahendus.
-        tabel(päeva_algus, päeva_lõpp, test))
+        tabel(päeva_algus, päeva_lõpp, test)
     except:
         messagebox.showwarning(title='Vigane URL-aadress!',
                                message='Sisestatud URL ei ole korrektne. Proovi uuesti!')

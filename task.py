@@ -4,25 +4,28 @@ from random import randint
 class Task:
 
     tasks = []
+    currentTask = None #Really bad....
     
-    def __init__(self, name, ajakulu, finishTime, timeSteps, priority, color):
+    def __init__(self, name, ajakulu, finishTime, timeSteps):
         self.name = name
         self.ajakulu = ajakulu #minutites int
         self.finishTime = finishTime
-        self.timeSteps = timeSteps #15,30,45,60 int
-        self.priority = priority
-        self.color = color
+        self.timeSteps = timeSteps #30,60,90,120 int
+        #self.priority = priority
         self.timesList = self.otsiVabadAjad()#Formaat list[] D:HH:mm
         Task.tasks.append(self)
         print(self.timesList)
-    
+
+    def getTimeSteps(self):
+        return self.timeSteps
+
     def getAjakulu(self):
         return self.ajakulu
     
     def getName(self):
         return self.name
     
-    def getFinishTime(Self):
+    def getFinishTime(self):
         return self.finishTime
 
     def getTimesList(self):
@@ -31,8 +34,9 @@ class Task:
     def otsiVabadAjad(self):
         steps = []
         a = self.ajakulu / self.timeSteps
+        print(a)
         if self.ajakulu % self.timeSteps == 0:
-            for i in range(int(a)):
+            for i in range(int(4)):
                 rand = randint(10, 23)
                 rand2 = randint(1, 2)
                 randDay = randint(1, 7)

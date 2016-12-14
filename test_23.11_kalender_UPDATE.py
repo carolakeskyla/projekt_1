@@ -22,41 +22,17 @@ class Main(tk.Tk):
         self.t = EntryTable(self, 2)
         self.t.pack(side='left', fill='x')
 
-        self.a = SimpleTable(self, 10)
-        self.a.pack(side='right', fill='x')
 
-        self.a.set(0, 2, '')
-        self.a.set(0, 3, 'Esmaspäev')
-        self.a.set(0, 4, 'Teisipäev')
-        self.a.set(0, 5, 'Kolmapäev')
-        self.a.set(0, 6, 'Neljapäev')
-        self.a.set(0, 7, 'Reede')
-        self.a.set(0, 8, 'Laupäev')
-        self.a.set(0, 9, 'Pühapäev')
-
-        for i in range(3, 10):
-            self.a.columnconfigure(i, minsize=80)
-            i += 1
-        self.a.columnconfigure(2, minsize=40)
 
         # Gets row and column values that correspond to the time and weekday. Returns list of int, [row, column].
 
-    def getRowColumn(self, time, weekday):
-        # rows = 2 * (self.t.kella_lõpp - self.t.kella_algus)
-        h, m = time.split(":")
-        column = 2 + weekday  # Weekday int(1, 7)
-        row = 0
-        if m == "15":
-            row = (int(h) - int(self.a.kella_algus)) * 2
-        else:
-            row = (int(h) - int(self.a.kella_algus)) * 2 + 1
-        return [row + 2, column]  # +2 first row are weekend day labels
+
 
 
 class EntryTable(tk.Frame):
     def __init__(self, parent, columns=2):
         tk.Frame.__init__(self, parent, bg="white")
-
+        self.parent = parent
         self.componentsFrame = ttk.Frame(self, padding="10 10 10 10")
 
         Label(self, text='1. Vali produktiivseim aeg töötamiseks: ', font='Sans 13 bold').grid(row=0, column=0, sticky=N + W)
@@ -94,7 +70,7 @@ class EntryTable(tk.Frame):
         self.ajakulu = Entry(self)
         self.ajakulu.configure(width=3)
         self.ajakulu.grid(row=9, column=0, padx=55, sticky=N + W)
-        Label(self, text='tundi (0.5h kaupa)').grid(row=9, column=0, padx=(100, 0), columnspan=2, sticky=N + W + S)
+        Label(self, text='minutites').grid(row=9, column=0, padx=(100, 0), columnspan=2, sticky=N + W + S)
 
         # Uue ülesande jagamine #FIXME: Kas drop menu või käsitsi sisestus?
         self.alg_tükeldamine = StringVar(self)
@@ -121,18 +97,30 @@ class EntryTable(tk.Frame):
         # self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
         # self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
         print("clicked button")
-        task.Task("Test1", 30, "Whatervear", 2, 1, "red")
-        for a in task.Task.tasks:
-            for time in a.getTimesList():
-                rowColumn = self.getRowColumn(time[1], time[0])
-                self.a.setWidgetBackground(rowColumn[0], rowColumn[1], "red")
-                self.a.getLabelObject(rowColumn[0], rowColumn[1]).setTooltipText("TESTETST")
-                self.a.getLabelObject(rowColumn[0], rowColumn[1]).setLessonName("TEST")
+        task.Task.currentTask = task.Task(self.ülesanne.get(), int(self.ajakulu.get()), self.alg_tähtaeg.get(), int(self.alg_tükeldamine.get().split()[0]))
+        for time in task.Task.currentTask.getTimesList():
+            rowColumn = self.getRowColumn(time[1], time[0])
+            if self.a.getLabelObject(rowColumn[0], rowColumn[1]).getLessonName() == "":
+                self.a.setWidgetBackground(rowColumn[0], rowColumn[1], "#ff6666")
+                #self.a.getLabelObject(rowColumn[0], rowColumn[1]).setTooltipText("TESTETST")
+                self.a.getLabelObject(rowColumn[0], rowColumn[1]).setLessonName("Soovitatav aeg!")
 
     def urlAdd(self):
         print('ADD URL')
+        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1175368736")
+        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), 10)
+        self.a.pack(side='right', fill='x')
 
     def callback(self):
+        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), 10)
+        self.a.pack(side='right', fill='x')
+
+
+        for i in range(3, 10):
+            self.a.columnconfigure(i, minsize=80)
+            i += 1
+        self.a.columnconfigure(2, minsize=40)
+        '''
         self.kella_algus = int(float(self.päeva_algus.get()))
         self.kella_lõpp = int(float(self.päeva_lõpp.get()))
         print(self.kella_algus)
@@ -154,16 +142,27 @@ class EntryTable(tk.Frame):
                 messagebox.showwarning(title='Vigane sisend!', message='Sisestatud tööaja lõpp ei ole vahemikus 2-24.')
             if self.kella_algus not in range(1, 24) and self.kella_lõpp in range(2, 25):
                 messagebox.showwarning(title='Vigane sisend!', message='Sisestatud tööaja algus ei ole vahemikus 1-23.')
+        '''
 
+    def getRowColumn(self, time, weekday):
+        # rows = 2 * (self.t.kella_lõpp - self.t.kella_algus)
+        h, m = time.split(":")
+        column = 2 + weekday  # Weekday int(1, 7)
+        row = 0
+        if m == "15":
+            row = (int(h) - int(self.a.kella_algus)) * 2
+        else:
+            row = (int(h) - int(self.a.kella_algus)) * 2 + 1
+        return [row + 2, column]  # +2 first row are weekend day labels
 class SimpleTable(tk.Frame):
-    def __init__(self, parent, columns=7):
+    def __init__(self, parent, kella_algus, kella_lõpp, columns=7):
         tk.Frame.__init__(self, parent, bg="#f4f4f2")
 
-        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1175368736")
+        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=2065436593")
 
         self._widgets = []
-        self.kella_algus = 9  # int(input('Sisesta, mis kellast sinu tööpäev algab: ')) + 1
-        self.kella_lõpp = 20  # int(input('Sisesta, mis kellast sinu tööpäev lõppeb:')) + 1
+        self.kella_algus = kella_algus  # int(input('Sisesta, mis kellast sinu tööpäev algab: ')) + 1
+        self.kella_lõpp = kella_lõpp  # int(input('Sisesta, mis kellast sinu tööpäev lõppeb:')) + 1
         ridade_arv = abs(self.kella_lõpp - self.kella_algus) * 2 + 2
         i = 2
         for row in range(ridade_arv - 1):
@@ -191,6 +190,16 @@ class SimpleTable(tk.Frame):
                 label.grid(row=row, column=column, sticky="nsew", padx=0.5, pady=0.5)
                 current_row.append(label)
             self._widgets.append(current_row)
+            
+        self.set(0, 2, '')
+        self.set(0, 3, 'Esmaspäev')
+        self.set(0, 4, 'Teisipäev')
+        self.set(0, 5, 'Kolmapäev')
+        self.set(0, 6, 'Neljapäev')
+        self.set(0, 7, 'Reede')
+        self.set(0, 8, 'Laupäev')
+        self.set(0, 9, 'Pühapäev')
+
 
         print(self._widgets) #FIXME: Kas salvestame nii faili?
 
@@ -205,7 +214,7 @@ class SimpleTable(tk.Frame):
     # Same as set, but modifies bg attribute.
     def setWidgetBackground(self, row, column, bg):
         widget = self._widgets[row][column]
-        widget.configure(bg=bg)
+        widget.setBackgroundColor(bg)
 
     def getLabelObject(self, row, column):
         return self._widgets[row][column]
