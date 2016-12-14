@@ -197,13 +197,15 @@ class SimpleTable(tk.Frame):
             index = self.getRowColumn(cls.getTime(), cls.getWeekday())
             if index == None or index[0] >= self.kella_lõpp:
                 continue
-            label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
-                                  cls.getDescription(), cls.getDate())
-            label.grid(row=index[0]+1, column=index[1]+1, sticky="nsew", padx=0.5, pady=0.5)
-            label.configure(width=8, font='Sans 12')
-            self._widgets[index[0]][index[1]] = label
-            print(self.getLabelObject(index[0], index[1]).getLessonName())
-            print(cls.getLessonName() + " " + str(index))
+            try:
+                label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
+                                      cls.getDescription(), cls.getDate())
+                label.grid(row=index[0]+1, column=index[1]+1, sticky="nsew", padx=0.5, pady=0.5)
+                label.configure(width=8, font='Sans 12')
+                self._widgets[index[0]][index[1]] = label
+            except:
+                pass#sest mul on suva
+            
 
     # Retrives widget at certain location and modifies it's text attribute.
     def set(self, row, column, value):
