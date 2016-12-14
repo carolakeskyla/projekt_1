@@ -1,12 +1,12 @@
 import tkinter as tk
 import task
 
-class Labels(tk.Label):
+class Labels(tk.Message):
 
     currentGreenColors = 0
 
     def __init__(self, frame, lessonName="", time="", location="", description="", date=""):
-        tk.Label.__init__(self, frame, text=lessonName)
+        tk.Message.__init__(self, frame, text=lessonName)
         self.lessonName = lessonName
         self.time = time
         self.location = location
@@ -36,7 +36,7 @@ class Labels(tk.Label):
         self.tw = tk.Toplevel(self)
         self.tw.wm_overrideredirect(True)
         self.tw.wm_geometry("+%d+%d" % (x, y))
-        label = tk.Label(self.tw, text=self.toolTipText, justify='left',
+        label = tk.Message(self.tw, text=self.toolTipText, justify='left',
                        background='yellow', relief='solid', borderwidth=1,
                        font=("times", "8", "normal"))
         label.pack(ipadx=1)
@@ -84,7 +84,7 @@ class Labels(tk.Label):
 
     def setLessonName(self, name):
         self.lessonName = name
-        self.configure(text=name)
+        self.configure(text=name, width=100)
 
     def getBackgroundColor(self):
         return self.bgColor
