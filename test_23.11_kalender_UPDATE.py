@@ -21,8 +21,6 @@ class Main(tk.Tk):
 
         self.t = EntryTable(self, 2)
         self.t.pack(side='left', fill='x')
-        # Gets row and column values that correspond to the time and weekday. Returns list of int, [row, column].
-
 
 class EntryTable(tk.Frame):
     def __init__(self, parent, columns=2):
@@ -44,19 +42,16 @@ class EntryTable(tk.Frame):
         self.päeva_lõpp.grid(row=2, column=0, padx=100, sticky=N + W)
         Label(self, text='.00').grid(row=2, column=0, padx=(128, 0), sticky=N + W + S)
 
-        Label(self, text='2. Sisesta URL-aadress: ', font='Sans 13 bold').grid(row=3, column=0, sticky=N + W)
+        Label(self, text='2. Sisesta URL-aadress: ', font='Sans 13 bold').grid(row=3, column=0, pady= (20, 0), sticky=N + W)
         self.url = Entry(self)  # relief=RIDGE
         self.url.grid(row=4, column=0, sticky=N + W)
         self.url.configure(width=25)
 
-        self.nupp_kellaajad = Button(self, text='Loo kalender', width=25, command=self.callback)  #Võtab kellaajad ja URLi
-        self.nupp_kellaajad.grid(row=5, column=0, pady=(0, 30), sticky=N + W)
-
         self.nupp_kustuta = Button(self, text='Kustuta vana kalender', width=25, command=lambda: self.a.pack_forget())
-        self.nupp_kustuta.grid(row=5, column=0, sticky=N + W)
+        self.nupp_kustuta.grid(row=6, column=0, pady=(0, 20), sticky=N + W)
 
-        self.nupp_kellaajad = Button(self, text='Loo uus kalender', width=25, command=self.callback)  #Võtab kellaajad ja URLi
-        self.nupp_kellaajad.grid(row=6, column=0, pady=(0, 30), sticky=N + W)
+        self.nupp_kellaajad = Button(self, text='Loo kalender', width=25, command=self.callback)  #Võtab kellaajad ja URLi
+        self.nupp_kellaajad.grid(row=5, column=0, sticky=N + W)
 
         # # Uue ülesande nimi:
         Label(self, text='3. Lisa uus ülesanne:', font='Sans 13 bold').grid(row=7, column=0, pady=5, sticky=N + W)
@@ -87,9 +82,7 @@ class EntryTable(tk.Frame):
                                   'Neljapäev', 'Reede', 'Laupäev', 'Pühapäev')
         self.tähtaeg.grid(row=11, column=0, padx=60, sticky=N + W)
 
-        # Uue ülesande callback (lisamisnupp):
-        self.nupp_uus = Button(self, width=10, text='Leia sobivad ajad',
-                               command=self.onButtonClicked)  # command=self.lisa_ülesanne)
+        self.nupp_uus = Button(self, width=10, text='Leia sobivad ajad', command=self.onButtonClicked)
         self.nupp_uus.grid(row=12, column=0, sticky='nsew')
 
     def onButtonClicked(self):  # FIXME: Kuidas SimpleTablesse tagastaks?
@@ -110,8 +103,11 @@ class EntryTable(tk.Frame):
 
     def callback(self):
 
-        self.kella_algus = int(float(self.päeva_algus.get()))
-        self.kella_lõpp = int(float(self.päeva_lõpp.get()))
+        try:
+            self.kella_algus = int(float(self.päeva_algus.get()))
+            self.kella_lõpp = int(float(self.päeva_lõpp.get()))
+        except ValueError:
+            messagebox.showwarning(title='Pole number!', message='Sisesta kindlasti täisarv!')
 
         if self.kella_lõpp > self.kella_algus and self.kella_lõpp in range(2, 25) and self.kella_algus in range(1, 24):
             self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), self.url.get(), 8)
@@ -123,11 +119,11 @@ class EntryTable(tk.Frame):
             return self.kella_algus, self.kella_lõpp #FIXME: Ei tagasta tegelikult miskit
 
         else:
-            if self.kella_algus > self.kella_lõpp:
+            if self.kella_algus in range(21, 25) and self.kella_algus > self.kella_lõpp:
                 messagebox.showwarning(title='Öö!', message='Proovi siis pigem ikka magada.')
-            if self.kella_lõpp < self.kella_algus:  # tekita messagebox
+            elif self.kella_lõpp < self.kella_algus:  # tekita messagebox
                 messagebox.showwarning(title='Vigane sisend!',
-                                       message='Sisestatud tööaja algus on hilisem kui tööaja lõpp! Sule aken ja proovi uuesti. ')
+                                       message='Sisestatud tööaja algus on hilisem kui tööaja lõpp!')
             if self.kella_lõpp not in range(2, 25) and self.kella_algus not in range(2, 24):
                 messagebox.showwarning(title='Vigane sisend!',
                                        message='Sisestatud tööaja algus ning sisestatud tööaja lõpp ei olnud ajavahemikus 1-24. Sule aken ja proovi uuesti!')
@@ -142,19 +138,18 @@ class SimpleTable(tk.Frame):
         tk.Frame.__init__(self, parent, bg="#f4f4f2")
 
         calander.createEventList(url)
-        # calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1134811720")
 
         self._widgets = []
-        self.kella_algus = kella_algus  # int(input('Sisesta, mis kellast sinu tööpäev algab: ')) + 1
-        self.kella_lõpp = kella_lõpp  # int(input('Sisesta, mis kellast sinu tööpäev lõppeb:')) + 1
+        self.kella_algus = kella_algus
+        self.kella_lõpp = kella_lõpp
         ridade_arv = abs(self.kella_lõpp - self.kella_algus) * 2 + 2
         i = 2
+
         for row in range(ridade_arv - 1):
             current_row = []
             for column in range(columns):
                 if column != 0:
-                    label = labels.Labels(self)  # text='', borderwidth=0, width=8, bg="#a8a8a8")
-                    # print(tund.Tund.tunnid)
+                    label = labels.Labels(self)
                     '''
                     for cls in tund.Tund.tunnid:
                         if cls.getWeekday() + 1 == column:
@@ -173,7 +168,11 @@ class SimpleTable(tk.Frame):
                         self.kella_algus += 1
                         i += 1
                 label.grid(row=row, column=column, sticky="nsew", padx=0.5, pady=0.5)
-                label.configure(width=8, font='Sans 12')
+                label.configure(width=8, font='Sans 11')
+                # if ridade_arv < 25:
+                #     label.configure(width=8, font='Sans 12')
+                # else:
+                #     label.configure(width=8, font='Sans 10')
                 current_row.append(label)
             self._widgets.append(current_row)
 
@@ -200,12 +199,11 @@ class SimpleTable(tk.Frame):
             try:
                 label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
                                       cls.getDescription(), cls.getDate())
-                label.grid(row=index[0]+1, column=index[1]+1, sticky="nsew", padx=0.5, pady=0.5)
-                label.configure(width=8, font='Sans 12')
+                label.grid(row=index[0]+1, column=index[1]+1, rowspan=4, sticky="nsew", padx=0.5, pady=0.5)
+                label.configure(width=8, font='Sans 11')
                 self._widgets[index[0]][index[1]] = label
             except:
                 pass#sest mul on suva
-            
 
     # Retrives widget at certain location and modifies it's text attribute.
     def set(self, row, column, value):
