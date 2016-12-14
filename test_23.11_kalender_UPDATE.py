@@ -195,7 +195,7 @@ class SimpleTable(tk.Frame):
     def refreshCalander(self):
         for cls in tund.Tund.tunnid:
             index = self.getRowColumn(cls.getTime(), cls.getWeekday())
-            if index == None:
+            if index == None or index[0] >= self.kella_lõpp:
                 continue
             label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
                                   cls.getDescription(), cls.getDate())
