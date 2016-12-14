@@ -14,6 +14,7 @@ import task
 # root = Tk()
 import tkinter as tk
 
+
 class Main(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -29,7 +30,8 @@ class EntryTable(tk.Frame):
         self.parent = parent
         self.componentsFrame = ttk.Frame(self, padding="10 10 10 10")
 
-        Label(self, text='1. Vali produktiivseim aeg töötamiseks: ', font='Sans 13 bold').grid(row=0, column=0, sticky=N + W)
+        Label(self, text='1. Vali produktiivseim aeg töötamiseks: ', font='Sans 13 bold').grid(row=0, column=0,
+                                                                                               sticky=N + W)
         Label(self, text='Tööaja algus:').grid(row=1, column=0, sticky=N + W)
         self.päeva_algus = Entry(self)
         self.päeva_algus.configure(width=2)
@@ -42,19 +44,17 @@ class EntryTable(tk.Frame):
         self.päeva_lõpp.grid(row=2, column=0, padx=100, sticky=N + W)
         Label(self, text='.00').grid(row=2, column=0, padx=(128, 0), sticky=N + W + S)
 
-        self.nupp_kellaajad = Button(self, text='Sisesta', width=25, command=self.callback)  # eelnevalt onButtonClicked
-        self.nupp_kellaajad.grid(row=3, column=0, pady=(0, 30), sticky=N + W)
-
-        # URLi sisestamine:
-        Label(self, text='2. Sisesta URL-aadress: ', font='Sans 13 bold').grid(row=4, column=0, sticky=N + W)
+        Label(self, text='2. Sisesta URL-aadress: ', font='Sans 13 bold').grid(row=3, column=0, sticky=N + W)
         self.url = Entry(self)  # relief=RIDGE
-        self.url.grid(row=5, column=0, sticky=N + W)
+        self.url.grid(row=4, column=0, sticky=N + W)
         self.url.configure(width=25)
-        self.nupp_url = Button(self, text='Lisa kohustused', width=25, command=self.urlAdd)  # FIXME: URL?
-        self.nupp_url.grid(row=6, column=0, pady=(0, 30), sticky=N + W)
-        #
+
+        self.nupp_kellaajad = Button(self, text='Loo kalender', width=25, command=self.callback)  #Võtab kellaajad ja URLi
+        self.nupp_kellaajad.grid(row=5, column=0, pady=(0, 30), sticky=N + W)
+
         # # Uue ülesande nimi:
-        Label(self, text='3. Lisa uus ülesanne:', font='Sans 13 bold').grid(row=7, column=0, pady=5, sticky=N + W)  # FIXME: Tee boldiks
+        Label(self, text='3. Lisa uus ülesanne:', font='Sans 13 bold').grid(row=7, column=0, pady=5,
+                                                                            sticky=N + W)  # FIXME: Tee boldiks
         Label(self, text='Nimi:').grid(row=8, column=0, sticky=N + W)
         self.ülesanne = Entry(self)
         self.ülesanne.grid(row=8, column=0, padx=55, sticky=N + W)
@@ -87,26 +87,21 @@ class EntryTable(tk.Frame):
                                command=self.onButtonClicked)  # command=self.lisa_ülesanne)
         self.nupp_uus.grid(row=12, column=0, sticky='nsew')
 
-    def onButtonClicked(self): #FIXME: Kuidas SimpleTablesse tagastaks?
+    def onButtonClicked(self):  # FIXME: Kuidas SimpleTablesse tagastaks?
         # self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
         # self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
         print("clicked button")
-        task.Task.currentTask = task.Task(self.ülesanne.get(), int(self.ajakulu.get()), self.alg_tähtaeg.get(), int(self.alg_tükeldamine.get().split()[0]))
+        task.Task.currentTask = task.Task(self.ülesanne.get(), int(self.ajakulu.get()), self.alg_tähtaeg.get(),
+                                          int(self.alg_tükeldamine.get().split()[0]))
         for time in task.Task.currentTask.getTimesList():
             rowColumn = self.getRowColumn(time[1], time[0])
             if self.a.getLabelObject(rowColumn[0], rowColumn[1]).getLessonName() == "":
                 self.a.setWidgetBackground(rowColumn[0], rowColumn[1], "#ff6666")
-                #self.a.getLabelObject(rowColumn[0], rowColumn[1]).setTooltipText("TESTETST")
+                # self.a.getLabelObject(rowColumn[0], rowColumn[1]).setTooltipText("TESTETST")
                 self.a.getLabelObject(rowColumn[0], rowColumn[1]).setLessonName("Soovitatav aeg!")
 
-    def urlAdd(self):
-        print('ADD URL')
-        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1175368736")
-        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), 8)
-        self.a.pack(side='right', fill='x')
-
     def callback(self):
-        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), 8)
+        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), self.url.get(), 8)
         self.a.pack(side='right', fill='x')
 
         for i in range(3, 8):
@@ -147,11 +142,14 @@ class EntryTable(tk.Frame):
         else:
             row = (int(h) - int(self.a.kella_algus)) * 2 + 1
         return [row + 2, column]  # +2 first row are weekend day labels
+
+
 class SimpleTable(tk.Frame):
-    def __init__(self, parent, kella_algus, kella_lõpp, columns=7):
+    def __init__(self, parent, kella_algus, kella_lõpp, url, columns=7):
         tk.Frame.__init__(self, parent, bg="#f4f4f2")
 
-        calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1134811720")
+        calander.createEventList(url)
+        # calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1134811720")
 
         self._widgets = []
         self.kella_algus = kella_algus  # int(input('Sisesta, mis kellast sinu tööpäev algab: ')) + 1
@@ -162,11 +160,11 @@ class SimpleTable(tk.Frame):
             current_row = []
             for column in range(columns):
                 if column != 0:
-                    label = labels.Labels(self) # text='', borderwidth=0, width=8, bg="#a8a8a8")
-                    #print(tund.Tund.tunnid)
+                    label = labels.Labels(self)  # text='', borderwidth=0, width=8, bg="#a8a8a8")
+                    # print(tund.Tund.tunnid)
                     for cls in tund.Tund.tunnid:
                         if cls.getWeekday() + 1 == column:
-                            if cls.getTime() == str(self.kella_algus-1) + ':15':
+                            if cls.getTime() == str(self.kella_algus - 1) + ':15':
                                 label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
                                                       cls.getDescription(), cls.getDate())
                                 print(cls.getLessonName() + " " + str(self.kella_algus - 2) + ':15')
@@ -184,7 +182,7 @@ class SimpleTable(tk.Frame):
                 label.configure(width=8, font='Sans 12')
                 current_row.append(label)
             self._widgets.append(current_row)
-            
+
         self.set(0, 0, '')
         self.set(0, 1, 'Esmaspäev')
         self.set(0, 2, 'Teisipäev')
@@ -194,8 +192,7 @@ class SimpleTable(tk.Frame):
         self.set(0, 6, 'Laupäev')
         self.set(0, 7, 'Pühapäev')
 
-
-        print(self._widgets) #FIXME: Kas salvestame nii faili?
+        print(self._widgets)  # FIXME: Kas salvestame nii faili?
 
         for column in range(columns):
             self.grid_columnconfigure(column, weight=1)
@@ -212,6 +209,7 @@ class SimpleTable(tk.Frame):
 
     def getLabelObject(self, row, column):
         return self._widgets[row][column]
+
 
 if __name__ == "__main__":
     app = Main()
