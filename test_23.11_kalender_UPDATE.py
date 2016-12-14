@@ -14,19 +14,13 @@ import task
 # root = Tk()
 import tkinter as tk
 
-
 class Main(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
 
         self.t = EntryTable(self, 2)
         self.t.pack(side='left', fill='x')
-
-
-
         # Gets row and column values that correspond to the time and weekday. Returns list of int, [row, column].
-
-
 
 
 class EntryTable(tk.Frame):
@@ -108,18 +102,17 @@ class EntryTable(tk.Frame):
     def urlAdd(self):
         print('ADD URL')
         calander.createEventList("http://www.is.ut.ee/pls/ois/ois.kalender?id_kalender=1175368736")
-        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), 10)
+        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), 8)
         self.a.pack(side='right', fill='x')
 
     def callback(self):
-        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), 10)
+        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), 8)
         self.a.pack(side='right', fill='x')
 
-
-        for i in range(3, 10):
-            self.a.columnconfigure(i, minsize=80)
+        for i in range(3, 8):
+            self.a.columnconfigure(i, minsize=80, weight=1)
             i += 1
-        self.a.columnconfigure(2, minsize=40)
+        self.a.columnconfigure(2, minsize=40, weight=1)
         '''
         self.kella_algus = int(float(self.päeva_algus.get()))
         self.kella_lõpp = int(float(self.päeva_lõpp.get()))
@@ -168,37 +161,37 @@ class SimpleTable(tk.Frame):
         for row in range(ridade_arv - 1):
             current_row = []
             for column in range(columns):
-                if column != 2:
+                if column != 0:
                     label = labels.Labels(self) # text='', borderwidth=0, width=8, bg="#a8a8a8")
                     #print(tund.Tund.tunnid)
                     for cls in tund.Tund.tunnid:
-                        if cls.getWeekday() + 4 == column:
+                        if cls.getWeekday() + 1 == column:
                             if cls.getTime() == str(self.kella_algus - 1) + ':15':
                                 label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
                                                       cls.getDescription(), cls.getDate())
                                 print(cls.getLessonName() + " " + str(self.kella_algus - 2) + ':15')
                 else:
-                    if row == 0:  # Kellaaegade üleval olev tühi kast.
+                    if row == 0 and column == 0:  # Kellaaegade üleval olev tühi kast.
                         label = tk.Label(self, text='', borderwidth=0, width=8)
                     elif self.kella_algus in range(self.kella_algus, self.kella_lõpp) and i % 2 == 0:
-                        label = tk.Label(self, text=str(self.kella_algus - 1) + '.15')
+                        label = tk.Label(self, text=str(self.kella_algus) + '.15')
                         i += 1
                     elif self.kella_algus in range(self.kella_algus, self.kella_lõpp) and i % 2 != 0:
-                        label = tk.Label(self, text=str(self.kella_algus - 1) + '.45')
+                        label = tk.Label(self, text=str(self.kella_algus) + '.45')
                         self.kella_algus += 1
                         i += 1
                 label.grid(row=row, column=column, sticky="nsew", padx=0.5, pady=0.5)
                 current_row.append(label)
             self._widgets.append(current_row)
             
-        self.set(0, 2, '')
-        self.set(0, 3, 'Esmaspäev')
-        self.set(0, 4, 'Teisipäev')
-        self.set(0, 5, 'Kolmapäev')
-        self.set(0, 6, 'Neljapäev')
-        self.set(0, 7, 'Reede')
-        self.set(0, 8, 'Laupäev')
-        self.set(0, 9, 'Pühapäev')
+        self.set(0, 0, '')
+        self.set(0, 1, 'Esmaspäev')
+        self.set(0, 2, 'Teisipäev')
+        self.set(0, 3, 'Kolmapäev')
+        self.set(0, 4, 'Neljapäev')
+        self.set(0, 5, 'Reede')
+        self.set(0, 6, 'Laupäev')
+        self.set(0, 7, 'Pühapäev')
 
 
         print(self._widgets) #FIXME: Kas salvestame nii faili?
