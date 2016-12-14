@@ -49,6 +49,9 @@ class EntryTable(tk.Frame):
         self.url.grid(row=4, column=0, sticky=N + W)
         self.url.configure(width=25)
 
+        self.nupp_kellaajad = Button(self, text='Loo kalender', width=25, command=self.callback)  #Võtab kellaajad ja URLi
+        self.nupp_kellaajad.grid(row=5, column=0, pady=(0, 30), sticky=N + W)
+
         self.nupp_kustuta = Button(self, text='Kustuta vana kalender', width=25, command=lambda: self.a.pack_forget())
         self.nupp_kustuta.grid(row=5, column=0, sticky=N + W)
 
@@ -89,34 +92,34 @@ class EntryTable(tk.Frame):
                                command=self.onButtonClicked)  # command=self.lisa_ülesanne)
         self.nupp_uus.grid(row=12, column=0, sticky='nsew')
 
-    def onButtonClicked(self):
+    def onButtonClicked(self):  # FIXME: Kuidas SimpleTablesse tagastaks?
         # self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
         # self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
         print("clicked button")
         task.Task.currentTask = task.Task(self.ülesanne.get(), int(self.ajakulu.get()), self.alg_tähtaeg.get(),
                                           int(self.alg_tükeldamine.get().split()[0]))
         for time in task.Task.currentTask.getTimesList():
-            rowColumn = self.getRowColumn(time[1], time[0])
-            if self.a.getLabelObject(rowColumn[0], rowColumn[1]).getLessonName() == "":
-                self.a.setWidgetBackground(rowColumn[0], rowColumn[1], "#ff6666")
-                # self.a.getLabelObject(rowColumn[0], rowColumn[1]).setTooltipText("TESTETST")
-                self.a.getLabelObject(rowColumn[0], rowColumn[1]).setLessonName("Soovitatav aeg!")
+            rowColumn = self.a.getRowColumn(time[1], time[0])
+            try:
+                if self.a.getLabelObject(rowColumn[0], rowColumn[1]).getLessonName() == "":
+                    self.a.setWidgetBackground(rowColumn[0], rowColumn[1], "#ff6666")
+                    # self.a.getLabelObject(rowColumn[0], rowColumn[1]).setTooltipText("TESTETST")
+                    self.a.getLabelObject(rowColumn[0], rowColumn[1]).setLessonName("Soovitatav aeg!")
+            except:
+                pass
 
     def callback(self):
-        self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), self.url.get(), 8)
-        self.a.pack(side='top', fill='x')
 
-        for i in range(3, 8):
-            self.a.columnconfigure(i, minsize=80, weight=1)
-            i += 1
-        self.a.columnconfigure(2, minsize=40, weight=1)
-        '''
         self.kella_algus = int(float(self.päeva_algus.get()))
         self.kella_lõpp = int(float(self.päeva_lõpp.get()))
-        print(self.kella_algus)
-        print(self.kella_lõpp)
 
         if self.kella_lõpp > self.kella_algus and self.kella_lõpp in range(2, 25) and self.kella_algus in range(1, 24):
+            self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), self.url.get(), 8)
+            self.a.pack(side='top', fill='x')
+            for i in range(3, 8):
+                self.a.columnconfigure(i, minsize=80, weight=1)
+                i += 1
+            self.a.columnconfigure(2, minsize=40, weight=1)
             return self.kella_algus, self.kella_lõpp #FIXME: Ei tagasta tegelikult miskit
 
         else:
@@ -132,18 +135,6 @@ class EntryTable(tk.Frame):
                 messagebox.showwarning(title='Vigane sisend!', message='Sisestatud tööaja lõpp ei ole vahemikus 2-24.')
             if self.kella_algus not in range(1, 24) and self.kella_lõpp in range(2, 25):
                 messagebox.showwarning(title='Vigane sisend!', message='Sisestatud tööaja algus ei ole vahemikus 1-23.')
-        '''
-
-    def getRowColumn(self, time, weekday):
-        # rows = 2 * (self.t.kella_lõpp - self.t.kella_algus)
-        h, m = time.split(":")
-        column = 2 + weekday  # Weekday int(1, 7)
-        row = 0
-        if m == "15":
-            row = (int(h) - int(self.a.kella_algus)) * 2
-        else:
-            row = (int(h) - int(self.a.kella_algus)) * 2 + 1
-        return [row + 2, column]  # +2 first row are weekend day labels
 
 
 class SimpleTable(tk.Frame):
@@ -164,14 +155,15 @@ class SimpleTable(tk.Frame):
                 if column != 0:
                     label = labels.Labels(self)  # text='', borderwidth=0, width=8, bg="#a8a8a8")
                     # print(tund.Tund.tunnid)
+                    '''
                     for cls in tund.Tund.tunnid:
                         if cls.getWeekday() + 1 == column:
-                            if cls.getTime() == str(self.kella_algus - 1) + ':15':
+                            if cls.getTime() == str(self.kella_algus) + ':15':
                                 label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
                                                       cls.getDescription(), cls.getDate())
-                                print(cls.getLessonName() + " " + str(self.kella_algus - 2) + ':15')
+                                print(cls.getLessonName() + " " + str(self.kella_algus) + ':15')'''
                 else:
-                    if row == 0 and column == 0:  # Kellaaegade üleval olev tühi kast.
+                    if row == 0:  # Kellaaegade üleval olev tühi kast.
                         label = tk.Label(self, text='', borderwidth=0, width=8)
                     elif self.kella_algus in range(self.kella_algus, self.kella_lõpp) and i % 2 == 0:
                         label = tk.Label(self, text=str(self.kella_algus) + '.15')
@@ -186,18 +178,32 @@ class SimpleTable(tk.Frame):
             self._widgets.append(current_row)
 
         self.set(0, 0, '')
-        self.set(0, 1, 'Esmaspäev')
-        self.set(0, 2, 'Teisipäev')
-        self.set(0, 3, 'Kolmapäev')
-        self.set(0, 4, 'Neljapäev')
-        self.set(0, 5, 'Reede')
-        self.set(0, 6, 'Laupäev')
-        self.set(0, 7, 'Pühapäev')
-
-        # print(self._widgets)  # FIXME: Kas salvestame nii faili?
+        self.getLabelObject(0, 1).setLessonName('Esmaspäev')
+        self.getLabelObject(0, 2).setLessonName('Teisipäev')
+        self.getLabelObject(0, 3).setLessonName('Kolmapäev')
+        self.getLabelObject(0, 4).setLessonName('Neljapäev')
+        self.getLabelObject(0, 5).setLessonName('Reede')
+        self.getLabelObject(0, 6).setLessonName('Laupäev')
+        self.getLabelObject(0, 7).setLessonName('Pühapäev')
+        self.kella_algus = kella_algus
+        self.kella_lõpp = kella_lõpp
+        self.refreshCalander()
 
         for column in range(columns):
             self.grid_columnconfigure(column, weight=1)
+
+    def refreshCalander(self):
+        for cls in tund.Tund.tunnid:
+            index = self.getRowColumn(cls.getTime(), cls.getWeekday())
+            if index == None:
+                continue
+            label = labels.Labels(self, cls.getLessonName(), cls.getTime(), cls.getLocation(),
+                                  cls.getDescription(), cls.getDate())
+            label.grid(row=index[0]+1, column=index[1]+1, sticky="nsew", padx=0.5, pady=0.5)
+            label.configure(width=8, font='Sans 12')
+            self._widgets[index[0]][index[1]] = label
+            print(self.getLabelObject(index[0], index[1]).getLessonName())
+            print(cls.getLessonName() + " " + str(index))
 
     # Retrives widget at certain location and modifies it's text attribute.
     def set(self, row, column, value):
@@ -212,6 +218,18 @@ class SimpleTable(tk.Frame):
     def getLabelObject(self, row, column):
         return self._widgets[row][column]
 
+    def getRowColumn(self, time, weekday):
+        # rows = 2 * (self.t.kella_lõpp - self.t.kella_algus)
+        h, m = time.split(":")
+        column = weekday  # Weekday int(1, 7)
+        row = 0
+        if m == "15":
+            row = (int(h) - int(self.kella_algus)) * 2
+        elif m == "45":
+            row = (int(h) - int(self.kella_algus)) * 2 + 1
+        else:
+            return None
+        return [row, column]  #
 
 if __name__ == "__main__":
     app = Main()

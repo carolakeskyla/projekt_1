@@ -36,7 +36,7 @@ class Task:
         a = self.ajakulu / self.timeSteps
         print(a)
         if self.ajakulu % self.timeSteps == 0:
-            for i in range(int(4)):
+            for i in range(int(10)):
                 rand = randint(10, 23)
                 rand2 = randint(1, 2)
                 randDay = randint(1, 7)

@@ -61,7 +61,11 @@ class Labels(tk.Label):
                         if type(column) is Labels:
                             if column.getBackgroundColor() == "green":
                                 column.setBackgroundColor("#70db70")
-                                column.setTooltipText(str(int(task.Task.currentTask.getAjakulu()/task.Task.currentTask.getTimeSteps())) + " minutit.\nLõpuaeg: " + task.Task.currentTask.getFinishTime())
+                                t = int(task.Task.currentTask.getAjakulu()/task.Task.currentTask.getTimeSteps())
+                                p = 30-t
+                                if p < 0:
+                                    p = 0
+                                column.setTooltipText(str(t) + " minutit.\nLõpuaeg: " + task.Task.currentTask.getFinishTime() + "\nPuhkusaeg:" + str(p) + " minutut.")
                                 column.setLessonName(task.Task.currentTask.getName())
                             if column.getBackgroundColor() == "#ff6666":
                                 column.setBackgroundColor("#f4f4f2")
