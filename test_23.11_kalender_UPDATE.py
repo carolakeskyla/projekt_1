@@ -10,7 +10,6 @@ import tkinter as tk
 class Main(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-
         self.t = EntryTable(self, 2)
         self.t.pack(side='left', fill='x')
 
@@ -20,45 +19,50 @@ class EntryTable(tk.Frame):
         self.parent = parent
         self.componentsFrame = ttk.Frame(self, padding="10 10 10 10")
 
-        Label(self, text='1. Vali produktiivseim aeg töötamiseks: ', font='Sans 13 bold').grid(row=0, column=0,
-                                                                                               sticky=N + W)
+        #Tööaja algus:
+        Label(self, text='1. Vali produktiivseim aeg töötamiseks: ', font='Sans 13 bold').grid(row=0, column=0, sticky=N + W)
         Label(self, text='Tööaja algus:').grid(row=1, column=0, sticky=N + W)
         self.päeva_algus = Entry(self)
         self.päeva_algus.configure(width=2)
         self.päeva_algus.grid(row=1, column=0, padx=100, sticky=N + W)
         Label(self, text='.00').grid(row=1, column=0, padx=(128, 0), sticky=N + W + S)
 
+        #Tööaja lõpp:
         Label(self, text='Tööaja lõpp:').grid(row=2, column=0, sticky=N + W)
         self.päeva_lõpp = Entry(self)
         self.päeva_lõpp.configure(width=2)
         self.päeva_lõpp.grid(row=2, column=0, padx=100, sticky=N + W)
         Label(self, text='.00').grid(row=2, column=0, padx=(128, 0), sticky=N + W + S)
 
+        #URL-aadress:
         Label(self, text='2. Sisesta URL-aadress: ', font='Sans 13 bold').grid(row=3, column=0, pady= (20, 0), sticky=N + W)
-        self.url = Entry(self)  # relief=RIDGE
+        self.url = Entry(self)
         self.url.grid(row=4, column=0, sticky=N + W)
         self.url.configure(width=25)
 
+        #Nupp vana kalendri kustutamiseks
         self.nupp_kustuta = Button(self, text='Kustuta vana kalender', width=25, command=lambda: self.a.pack_forget())
         self.nupp_kustuta.grid(row=6, column=0, pady=(0, 20), sticky=N + W)
 
+        #Nupp (uue) kalendri loomiseks
         self.nupp_kellaajad = Button(self, text='Loo kalender', width=25, command=self.callback)  #Võtab kellaajad ja URLi
         self.nupp_kellaajad.grid(row=5, column=0, sticky=N + W)
 
-        # # Uue ülesande nimi:
+        #Uue ülesande lisamine:
+        #Ülesande nimi:
         Label(self, text='3. Lisa uus ülesanne:', font='Sans 13 bold').grid(row=7, column=0, pady=5, sticky=N + W)
         Label(self, text='Nimi:').grid(row=8, column=0, sticky=N + W)
         self.ülesanne = Entry(self)
         self.ülesanne.grid(row=8, column=0, padx=55, sticky=N + W)
 
-        # Uue ülesande ajakulu:
+        #Ülesande ajakulu:
         Label(self, text='Ajakulu:').grid(row=9, column=0, sticky=N + W)
         self.ajakulu = Entry(self)
         self.ajakulu.configure(width=3)
         self.ajakulu.grid(row=9, column=0, padx=55, sticky=N + W)
         Label(self, text='minutites').grid(row=9, column=0, padx=(100, 0), columnspan=2, sticky=N + W + S)
 
-        # Uue ülesande jagamine
+        #Ülesande ajakulu tükeldamine
         self.alg_tükeldamine = StringVar(self)
         self.alg_tükeldamine.set('Vali kordade arv:')
         Label(self, text='Töö tükeldamine:').grid(row=10, column=0, sticky=N + W)
@@ -66,7 +70,7 @@ class EntryTable(tk.Frame):
                                       '5 korda', '6 korda')
         self.tükeldamine.grid(row=10, column=0, padx=(120, 0), sticky=N + W)
 
-        # Mis päevaks?
+        #Ülesande tähtaeg
         self.alg_tähtaeg = StringVar(self)
         self.alg_tähtaeg.set('Vali päev:')
         Label(self, text='Tähtaeg:').grid(row=11, column=0, sticky=N + W)
@@ -77,7 +81,7 @@ class EntryTable(tk.Frame):
         self.nupp_uus = Button(self, width=10, text='Leia sobivad ajad', command=self.onButtonClicked)
         self.nupp_uus.grid(row=12, column=0, sticky='nsew')
 
-    def onButtonClicked(self):
+    def onButtonClicked(self): #Soovitab kasutajale uueks ülesandeks aegu.
         # self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
         # self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
         print("clicked button")
@@ -93,13 +97,12 @@ class EntryTable(tk.Frame):
             except:
                 pass
 
-    def callback(self):
+    def callback(self): #Võtab ja kontrollib sisestatud tööpäeva alguse ja lõpu sobivust.
         try:
             self.kella_algus = int(float(self.päeva_algus.get()))
             self.kella_lõpp = int(float(self.päeva_lõpp.get()))
         except ValueError:
             messagebox.showwarning(title='Pole number!', message='Sisesta kindlasti täisarv!')
-
         if self.kella_lõpp > self.kella_algus and self.kella_lõpp in range(2, 25) and self.kella_algus in range(1, 24):
             self.a = SimpleTable(self.parent, int(float(self.päeva_algus.get())), int(float(self.päeva_lõpp.get())), self.url.get(), 8)
             self.a.pack(side='top', fill='x')
@@ -108,11 +111,10 @@ class EntryTable(tk.Frame):
                 i += 1
             self.a.columnconfigure(2, minsize=40, weight=1)
             return self.kella_algus, self.kella_lõpp
-
-        else:
+        else: #Vigaste sisendite korral kuvab warning message'i
             if self.kella_algus in range(21, 25) and self.kella_algus > self.kella_lõpp:
                 messagebox.showwarning(title='Öö!', message='Proovi siis pigem ikka magada.')
-            elif self.kella_lõpp < self.kella_algus:  # tekita messagebox
+            elif self.kella_lõpp < self.kella_algus:
                 messagebox.showwarning(title='Vigane sisend!',
                                        message='Sisestatud tööaja algus on hilisem kui tööaja lõpp!')
             if self.kella_lõpp not in range(2, 25) and self.kella_algus not in range(2, 24):
@@ -123,7 +125,7 @@ class EntryTable(tk.Frame):
             if self.kella_algus not in range(1, 24) and self.kella_lõpp in range(2, 25):
                 messagebox.showwarning(title='Vigane sisend!', message='Sisestatud tööaja algus ei ole vahemikus 1-23.')
 
-class SimpleTable(tk.Frame):
+class SimpleTable(tk.Frame): #Kalendriloomine
     def __init__(self, parent, kella_algus, kella_lõpp, url, columns=7):
         tk.Frame.__init__(self, parent, bg="#f4f4f2")
         
@@ -133,7 +135,7 @@ class SimpleTable(tk.Frame):
         self.kella_algus = kella_algus
         self.kella_lõpp = kella_lõpp
         ridade_arv = abs(self.kella_lõpp - self.kella_algus) * 2 + 2
-        i = 2
+        i = 2 #Muutuja: hoiab silma peal kas kell on veerand või kolmveerand.
 
         for row in range(ridade_arv - 1):
             current_row = []
@@ -181,7 +183,7 @@ class SimpleTable(tk.Frame):
         for column in range(columns):
             self.grid_columnconfigure(column, weight=1)
 
-    def refreshCalander(self):
+    def refreshCalander(self): #Salvestab kalendrisse uue ülesande.
         for cls in tund.Tund.tunnid:
             index = self.getRowColumn(cls.getTime(), cls.getWeekday())
             if index == None or index[0] >= self.kella_lõpp:
@@ -209,7 +211,6 @@ class SimpleTable(tk.Frame):
         return self._widgets[row][column]
 
     def getRowColumn(self, time, weekday):
-        # rows = 2 * (self.t.kella_lõpp - self.t.kella_algus)
         h, m = time.split(":")
         column = weekday  # Weekday int(1, 7)
         row = 0
@@ -219,7 +220,7 @@ class SimpleTable(tk.Frame):
             row = (int(h) - int(self.kella_algus)) * 2 + 1
         else:
             return None
-        return [row, column]  #
+        return [row, column]
 
 if __name__ == "__main__":
     app = Main()
@@ -227,4 +228,5 @@ if __name__ == "__main__":
     app.mainloop()
     
 #Abimaterjalid:
-# http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
+#http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
+#http://stackoverflow.com/questions/12364981/how-to-delete-tkinter-widgets-from-a-window
