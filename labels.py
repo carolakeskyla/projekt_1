@@ -65,14 +65,13 @@ class Labels(tk.Message):
                                 p = 30-t
                                 if p < 0:
                                     p = 0
-                                column.setTooltipText(str(t) + " minutit.\nLõpuaeg: " + task.Task.currentTask.getFinishTime() + "\nPuhkusaeg:" + str(p) + " minutut.")
+                                column.setTooltipText(str(t) + " minutit.\nLõpuaeg: " + task.Task.currentTask.getFinishTime() + "\nPuhkusaeg: " + str(p) + " minutit.")
                                 column.setLessonName(task.Task.currentTask.getName())
                             if column.getBackgroundColor() == "#ff6666":
                                 column.setBackgroundColor("#f4f4f2")
                                 column.setLessonName("")
                 task.Task.currentTask = None
                 Labels.currentGreenColors = 0
-
         print("Clicked")
 
     def getLessonName(self):
@@ -84,7 +83,7 @@ class Labels(tk.Message):
 
     def setLessonName(self, name):
         self.lessonName = name
-        self.configure(text=name, width=100)
+        self.configure(text=name, width=100, font='Sans 11')
 
     def getBackgroundColor(self):
         return self.bgColor
