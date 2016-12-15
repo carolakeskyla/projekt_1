@@ -1,19 +1,14 @@
 # todo:
 # 1. Kuidas terve kalender saveda nii, et teinekord akent avades saaks failina (?) vana kalendri avada?
 
-
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-# Source:# http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
 import calander
 import tund
 import labels
 import task
-
-# root = Tk()
 import tkinter as tk
-
 
 class Main(tk.Tk):
     def __init__(self):
@@ -85,7 +80,7 @@ class EntryTable(tk.Frame):
         self.nupp_uus = Button(self, width=10, text='Leia sobivad ajad', command=self.onButtonClicked)
         self.nupp_uus.grid(row=12, column=0, sticky='nsew')
 
-    def onButtonClicked(self):  # FIXME: Kuidas SimpleTablesse tagastaks?
+    def onButtonClicked(self):
         # self.t.setWidgetBackground(rowColumn[0],rowColumn[1], "red")
         # self.t.set(rowColumn[0], rowColumn[1], "Nt,vabaaeg: 10:45-11:00")
         print("clicked button")
@@ -102,7 +97,6 @@ class EntryTable(tk.Frame):
                 pass
 
     def callback(self):
-
         try:
             self.kella_algus = int(float(self.päeva_algus.get()))
             self.kella_lõpp = int(float(self.päeva_lõpp.get()))
@@ -116,7 +110,7 @@ class EntryTable(tk.Frame):
                 self.a.columnconfigure(i, minsize=80, weight=1)
                 i += 1
             self.a.columnconfigure(2, minsize=40, weight=1)
-            return self.kella_algus, self.kella_lõpp #FIXME: Ei tagasta tegelikult miskit
+            return self.kella_algus, self.kella_lõpp
 
         else:
             if self.kella_algus in range(21, 25) and self.kella_algus > self.kella_lõpp:
@@ -132,11 +126,10 @@ class EntryTable(tk.Frame):
             if self.kella_algus not in range(1, 24) and self.kella_lõpp in range(2, 25):
                 messagebox.showwarning(title='Vigane sisend!', message='Sisestatud tööaja algus ei ole vahemikus 1-23.')
 
-
 class SimpleTable(tk.Frame):
     def __init__(self, parent, kella_algus, kella_lõpp, url, columns=7):
         tk.Frame.__init__(self, parent, bg="#f4f4f2")
-
+        
         calander.createEventList(url)
 
         self._widgets = []
@@ -169,10 +162,10 @@ class SimpleTable(tk.Frame):
                         i += 1
                 label.grid(row=row, column=column, sticky="nsew", padx=0.5, pady=0.5)
                 label.configure(width=8, font='Sans 11')
-                # if ridade_arv < 25:
-                #     label.configure(width=8, font='Sans 12')
-                # else:
-                #     label.configure(width=8, font='Sans 10')
+                if ridade_arv < 25:
+                    label.configure(width=8, font='Sans 12')
+                else:
+                    label.configure(width=8, font='Sans 10')
                 current_row.append(label)
             self._widgets.append(current_row)
 
@@ -235,3 +228,6 @@ if __name__ == "__main__":
     app = Main()
     app.title('Ajaplaneerija')
     app.mainloop()
+    
+#Abimaterjalid:
+# http://stackoverflow.com/questions/9348264/does-tkinter-have-a-table-widget
