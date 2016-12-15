@@ -62,6 +62,7 @@ class Task:
                 #time = str(rand) + ":" + str(self.timeSteps)
                 #...
         return steps
+    
     def checkIfTimeConflicts(self, time, day):
         for t in tund.Tund.tunnid:
             if t.getWeekday() == day:
@@ -82,11 +83,4 @@ class Task:
         time2 = time1 + minutes
         h = int(time2/60)
         m = time2 - (h*60)
-        return str(h) + ":" + str(m)
-        
-        
-            
-            
-
-        
-        
+        return str(h) + ":" + str(m)  
