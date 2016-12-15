@@ -1,6 +1,3 @@
-# todo:
-# 1. Kuidas terve kalender saveda nii, et teinekord akent avades saaks failina (?) vana kalendri avada?
-
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -61,7 +58,7 @@ class EntryTable(tk.Frame):
         self.ajakulu.grid(row=9, column=0, padx=55, sticky=N + W)
         Label(self, text='minutites').grid(row=9, column=0, padx=(100, 0), columnspan=2, sticky=N + W + S)
 
-        # Uue ülesande jagamine #FIXME: Kas drop menu või käsitsi sisestus?
+        # Uue ülesande jagamine
         self.alg_tükeldamine = StringVar(self)
         self.alg_tükeldamine.set('Vali kordade arv:')
         Label(self, text='Töö tükeldamine:').grid(row=10, column=0, sticky=N + W)
@@ -196,7 +193,7 @@ class SimpleTable(tk.Frame):
                 label.configure(width=100, font='Sans 11')
                 self._widgets[index[0]][index[1]] = label
             except:
-                pass#sest mul on suva
+                pass
 
     # Retrives widget at certain location and modifies it's text attribute.
     def set(self, row, column, value):
