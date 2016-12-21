@@ -15,7 +15,7 @@ class Main(tk.Tk):
 
 class EntryTable(tk.Frame):
     def __init__(self, parent, columns=2):
-        tk.Frame.__init__(self, parent, bg="white")
+        tk.Frame.__init__(self, parent)
         self.parent = parent
         self.componentsFrame = ttk.Frame(self, padding="10 10 10 10")
 
@@ -93,7 +93,7 @@ class EntryTable(tk.Frame):
                 if self.a.getLabelObject(rowColumn[0], rowColumn[1]).getLessonName() == "":
                     self.a.setWidgetBackground(rowColumn[0], rowColumn[1], "#ff6666")
                     # self.a.getLabelObject(rowColumn[0], rowColumn[1]).setTooltipText("TESTETST")
-                    self.a.getLabelObject(rowColumn[0], rowColumn[1]).setLessonName("Soovitatav aeg!")
+                    self.a.getLabelObject(rowColumn[0], rowColumn[1]).setLessonName("Äkki siis sobiks?")
             except:
                 pass
 
@@ -224,7 +224,7 @@ class SimpleTable(tk.Frame): #Kalendriloomine
 
 if __name__ == "__main__":
     app = Main()
-    app.title('Ajaplaneerija')
+    app.title('Nädalaplaneerija')
     app.mainloop()
     
 #Abimaterjalid:
