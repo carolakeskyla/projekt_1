@@ -39,7 +39,11 @@ class Task:
             for i in range(int(10)):
                 rand = randint(10, 23)
                 rand2 = randint(1, 2)
-                randDay = randint(1, 7)
+                päevad = ['Esmaspäev', 'Teisipäev', 'Kolmapäev', 'Neljapäev', 'Reede', 'Laupäev', 'Pühapäev']
+                tähtaeg = päevad.index(self.finishTime)
+                if self.finishTime == 'Esmaspäev':
+                    tähtaeg = 1
+                randDay = randint(1, tähtaeg)
                 if rand2 == 1:
                     rand2 = 15
                 else:
